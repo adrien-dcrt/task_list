@@ -32,6 +32,11 @@ class Task
      */
     private $createdAt;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=TaskList::class, inversedBy="tasks")
+     */
+    private $taskList;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -69,6 +74,18 @@ class Task
     public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getTaskList(): ?TaskList
+    {
+        return $this->taskList;
+    }
+
+    public function setTaskList(?TaskList $taskList): self
+    {
+        $this->taskList = $taskList;
 
         return $this;
     }
