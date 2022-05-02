@@ -46,7 +46,7 @@ class TaskListController extends AbstractController
     }
 
     /**
-     * @Route("/list/{id}", name="app_task_list_show", methods={"GET"})
+     * @Route("/list/{name}", name="app_task_list_show", methods={"GET"})
      */
     public function show(TaskList $taskList): Response
     {
@@ -56,7 +56,7 @@ class TaskListController extends AbstractController
     }
 
     /**
-     * @Route("/list/{id}/edit", name="app_task_list_edit", methods={"GET", "POST"})
+     * @Route("/list/{name}/edit", name="app_task_list_edit", methods={"GET", "POST"})
      */
     public function edit(Request $request, TaskList $taskList, TaskListRepository $taskListRepository): Response
     {
@@ -75,11 +75,31 @@ class TaskListController extends AbstractController
     }
 
     /**
-     * @Route("/list/{id}", name="app_task_list_delete", methods={"POST"})
+     * @Route("/list/{name}/edit/new_task", name="app_task_new", methods={"GET", "POST"})
+     */
+    public function newTask(Request $request, TaskRepository $taskRepository): Response
+    {
+        $task = new Task();
+        $form = $this->createForm(TaskType::class, $task);
+        $form->handleRequest($request);
+        $task->setCreatedAt( new \DateTimeImmutable() );
+        if ($form->isSubmitted() && $form->isValid()) {
+            $taskRepository->add($task);
+            return $this->redirectToRoute('app_task_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('task/new.html.twig', [
+            'task' => $task,
+            'form' => $form,
+        ]);
+    }
+
+    /**
+     * @Route("/list/{name}", name="app_task_list_delete", methods={"POST"})
      */
     public function delete(Request $request, TaskList $taskList, TaskListRepository $taskListRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$taskList->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$taskList->getName(), $request->request->get('_token'))) {
             $taskListRepository->remove($taskList);
         }
 

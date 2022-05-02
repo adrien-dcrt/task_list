@@ -16,36 +16,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class TaskController extends AbstractController
 {
     /**
-     * @Route("/", name="app_task_index", methods={"GET"})
-     */
-    public function index(TaskRepository $taskRepository): Response
-    {
-        return $this->render('task/index.html.twig', [
-            'tasks' => $taskRepository->findAll(),
-        ]);
-    }
-
-    /**
-     * @Route("/new", name="app_task_new", methods={"GET", "POST"})
-     */
-    public function new(Request $request, TaskRepository $taskRepository): Response
-    {
-        $task = new Task();
-        $form = $this->createForm(TaskType::class, $task);
-        $form->handleRequest($request);
-        $task->setCreatedAt( new \DateTimeImmutable() );
-        if ($form->isSubmitted() && $form->isValid()) {
-            $taskRepository->add($task);
-            return $this->redirectToRoute('app_task_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('task/new.html.twig', [
-            'task' => $task,
-            'form' => $form,
-        ]);
-    }
-
-    /**
      * @Route("/{id}", name="app_task_show", methods={"GET"})
      */
     public function show(Task $task): Response
