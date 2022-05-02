@@ -5,6 +5,36 @@
 {% block body %}
     <h1>Edit TaskList</h1>
 
+     <h2>Les tâches</h2>
+        <a class="btn btn-primary col-12" href="{{ path('app_task_new', {'name': task_list.name}) }}">Créer une nouvelle tâche</a>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>State</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for task in task_list.tasks %}
+                <tr>
+                    <td>{{ task.title }}</td>
+                    <td>
+                        {{ (task.state == 1 ) ?  '<i class="fa-regular fa-square-check"></i> Fait' : '<i class="fa-regular fa-square"></i> A faire' }}
+                    </a></td>
+                    <td>
+                        <a class="btn btn-primary" href="{{ path('app_task_edit', {'id': task.id}) }}">Editer <i class="fa-solid fa-pen-to-square"></i></a>
+                        {{ include('task_list/_delete_form.html.twig') }}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
     {{ include('task_list/_form.html.twig', {'button_label': 'Update'}) }}
 
     <a href="{{ path('app_task_list_index') }}">back to list</a>
