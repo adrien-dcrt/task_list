@@ -26,14 +26,14 @@ class TaskListController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="app_task_list_new", methods={"GET", "POST"})
+     * @Route("/list/new", name="app_task_list_new", methods={"GET", "POST"})
      */
     public function new(Request $request, TaskListRepository $taskListRepository): Response
     {
         $taskList = new TaskList();
         $form = $this->createForm(TaskListType::class, $taskList);
         $form->handleRequest($request);
-
+        $taskList->setCreatedAt( new \DateTimeImmutable() );
         if ($form->isSubmitted() && $form->isValid()) {
             $taskListRepository->add($taskList);
             return $this->redirectToRoute('app_task_list_index', [], Response::HTTP_SEE_OTHER);
@@ -46,7 +46,7 @@ class TaskListController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="app_task_list_show", methods={"GET"})
+     * @Route("/list/{id}", name="app_task_list_show", methods={"GET"})
      */
     public function show(TaskList $taskList): Response
     {
@@ -56,7 +56,7 @@ class TaskListController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="app_task_list_edit", methods={"GET", "POST"})
+     * @Route("/list/{id}/edit", name="app_task_list_edit", methods={"GET", "POST"})
      */
     public function edit(Request $request, TaskList $taskList, TaskListRepository $taskListRepository): Response
     {
@@ -75,7 +75,7 @@ class TaskListController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="app_task_list_delete", methods={"POST"})
+     * @Route("/list/{id}", name="app_task_list_delete", methods={"POST"})
      */
     public function delete(Request $request, TaskList $taskList, TaskListRepository $taskListRepository): Response
     {
