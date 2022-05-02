@@ -33,7 +33,7 @@ class TaskController extends AbstractController
         $task = new Task();
         $form = $this->createForm(TaskType::class, $task);
         $form->handleRequest($request);
-
+        $task->setCreatedAt( new \DateTimeImmutable() );
         if ($form->isSubmitted() && $form->isValid()) {
             $taskRepository->add($task);
             return $this->redirectToRoute('app_task_index', [], Response::HTTP_SEE_OTHER);

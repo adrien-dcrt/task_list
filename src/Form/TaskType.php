@@ -13,9 +13,10 @@ class TaskType extends AbstractType
     {
         $builder
             ->add('title')
-            ->add('state')
-            ->add('createdAt')
-            ->add('taskList')
+            ->add('state', CheckboxType::class, [
+                'label' => 'Fait',
+                'required' => false,
+            ])
         ;
     }
 
