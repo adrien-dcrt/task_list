@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Task;
 use App\Entity\TaskList;
 use App\Form\TaskListType;
+use App\Form\TaskType;
 use App\Repository\TaskListRepository;
+use App\Repository\TaskRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -77,15 +80,17 @@ class TaskListController extends AbstractController
     /**
      * @Route("/list/{name}/edit/new_task", name="app_task_new", methods={"GET", "POST"})
      */
-    public function newTask(Request $request, TaskRepository $taskRepository): Response
+    public function newTask(Request $request, TaskListRepository $taskListRepository, TaskRepository $taskRepository): Response
     {
         $task = new Task();
+        $taskList = $taskListRepository->findOneBy(['name' => $request->attributes->get('name')]);
+        $task->setTaskList($taskList);
         $form = $this->createForm(TaskType::class, $task);
         $form->handleRequest($request);
         $task->setCreatedAt( new \DateTimeImmutable() );
         if ($form->isSubmitted() && $form->isValid()) {
             $taskRepository->add($task);
-            return $this->redirectToRoute('app_task_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_task_list_edit', ['name' => $taskList->getName()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('task/new.html.twig', [
