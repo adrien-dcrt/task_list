@@ -6,9 +6,11 @@ use App\Repository\TaskListRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=TaskListRepository::class)
+ * @UniqueEntity(fields={"name"}, message="Une liste avec le même nom existe déjà")
  */
 class TaskList
 {
