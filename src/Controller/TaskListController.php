@@ -19,12 +19,22 @@ use Symfony\Component\Routing\Annotation\Route;
 class TaskListController extends AbstractController
 {
     /**
-     * @Route("/", name="app_task_list_index", methods={"GET"})
+     * @Route("/", name="app_task_list_index", methods={"GET", "POST"})
      */
-    public function index(TaskListRepository $taskListRepository): Response
+    public function index(Request $request, TaskListRepository $taskListRepository): Response
     {
+        $taskList = new TaskList();
+        $form = $this->createForm(TaskListType::class, $taskList);
+        $form->handleRequest($request);
+        $taskList->setCreatedAt( new \DateTimeImmutable() );
+        if ($form->isSubmitted() && $form->isValid()) {
+            $taskListRepository->add($taskList);
+            return $this->redirectToRoute('app_task_list_edit', ['name' => $taskList->getName()], Response::HTTP_SEE_OTHER);
+        }
+
         return $this->render('task_list/index.html.twig', [
             'task_lists' => $taskListRepository->findAll(),
+            'form' => $form->createView(),
         ]);
     }
 

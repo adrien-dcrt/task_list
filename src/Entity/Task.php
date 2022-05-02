@@ -4,9 +4,11 @@ namespace App\Entity;
 
 use App\Repository\TaskRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=TaskRepository::class)
+ * @UniqueEntity(fields={"title", "taskList"}, errorPath="title", message="Une tâche avec le même nom existe déjà")
  */
 class Task
 {
