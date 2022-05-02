@@ -27,7 +27,7 @@ class TaskList
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity=task::class, mappedBy="taskList",cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity=Task::class, mappedBy="taskList",cascade={"persist", "remove"})
      */
     private $tasks;
 
