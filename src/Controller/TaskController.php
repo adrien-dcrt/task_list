@@ -35,7 +35,7 @@ class TaskController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $taskRepository->add($task);
-            return $this->redirectToRoute('app_task_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_task_list_edit', ['name' => $task->getTaskList()->getName()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('task/edit.html.twig', [
@@ -49,10 +49,11 @@ class TaskController extends AbstractController
      */
     public function delete(Request $request, Task $task, TaskRepository $taskRepository): Response
     {
+        $name = $task->getTaskList()->getName();
         if ($this->isCsrfTokenValid('delete'.$task->getId(), $request->request->get('_token'))) {
             $taskRepository->remove($task);
         }
 
-        return $this->redirectToRoute('app_task_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_task_list_edit', ['name' => $name], Response::HTTP_SEE_OTHER);
     }
 }
