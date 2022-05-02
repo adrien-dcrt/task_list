@@ -45,6 +45,18 @@ class TaskController extends AbstractController
     }
 
     /**
+     * @Route("toggle/{id}", name="app_task_toggle", methods={"GET", "POST"})
+     */
+    public function toggle(Task $task, Request $request, TaskRepository $taskRepository): Response
+    {
+        $form = $this->createForm(TaskType::class, $task);
+        $form->handleRequest($request);
+        ( 1 == $task->getState() ) ? $task->setState(0) : $task->setState(1);
+        $taskRepository->add($task);
+        return $this->redirectToRoute('app_task_list_edit', ['name' => $task->getTaskList()->getName()]);
+    }
+
+    /**
      * @Route("/{id}", name="app_task_delete", methods={"POST"})
      */
     public function delete(Request $request, Task $task, TaskRepository $taskRepository): Response

@@ -19,7 +19,13 @@
             <tr>
                 <td>{{ task_list.id }}</td>
                 <td>{{ task_list.name }}</td>
-                <td>{{ task_list.createdAt ? task_list.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    {% if task_list.tasks  is not null %}
+                        {{ task_list.tasks | length }}
+                    {% else %}
+                        Aucune Tâche
+                    {% endif %}
+                </td>
                 <td>
                     <a href="{{ path('app_task_list_show', {'name': task_list.name}) }}">show</a>
                     <a href="{{ path('app_task_list_edit', {'name': task_list.name}) }}">edit</a>

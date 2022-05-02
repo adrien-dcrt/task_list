@@ -120,4 +120,16 @@ class TaskListController extends AbstractController
 
         return $this->redirectToRoute('app_task_list_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    /**
+     * @Route("/list/{name}/delDone", name="app_task_list_delete_dones", methods={"GET", "POST"})
+     */
+    public function deleteDones(Request $request, TaskList $taskList, TaskListRepository $taskListRepository): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$taskList->getName(), $request->request->get('_token'))) {
+            $taskListRepository->removeDoneTasks($taskList);
+        }
+        
+        return $this->redirectToRoute('app_task_list_edit', ['name' => $taskList->getName()], Response::HTTP_SEE_OTHER);
+    }
 }

@@ -4,6 +4,8 @@
 
 {% block body %}
     <h1>Edit TaskList</h1>
+    
+    {{ include('task_list/_form.html.twig', {'button_label': 'Update'}) }}
 
      <h2>Les tâches</h2>
         <a class="btn btn-primary col-12" href="{{ path('app_task_new', {'name': task_list.name}) }}">Créer une nouvelle tâche</a>
@@ -17,9 +19,9 @@
             </thead>
             <tbody>
             {% for task in task_list.tasks %}
-                <tr>
+                <tr class={{ (task.state == 1 ) ? '"done"' : '"todo"' }}>
                     <td>{{ task.title }}</td>
-                    <td>
+                    <td><a class="btn btn-primary" href="{{ path('app_task_toggle', {'id': task.id}) }}">
                         {{ (task.state == 1 ) ?  '<i class="fa-regular fa-square-check"></i> Fait' : '<i class="fa-regular fa-square"></i> A faire' }}
                     </a></td>
                     <td>
@@ -34,8 +36,12 @@
             {% endfor %}
             </tbody>
         </table>
+        <form class="btn btn-outline-danger delete-form" method="post" action="{{ path('app_task_list_delete_dones', {'name': task_list.name}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ task_list.name) }}">
+            <button class="btn">Supprimer les tâches terminées<i class="fa fa-trash"></i></button>
+        </form>
 
-    {{ include('task_list/_form.html.twig', {'button_label': 'Update'}) }}
+    
 
     <a href="{{ path('app_task_list_index') }}">back to list</a>
 

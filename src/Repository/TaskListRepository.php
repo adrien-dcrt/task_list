@@ -47,6 +47,24 @@ class TaskListRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function removeDoneTasks(TaskList $entity, bool $flush = true): void
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+            DELETE t 
+            FROM task_list tl
+            INNER JOIN task t ON t.task_list_id = tl.id
+            WHERE tl.id = :taskList
+            AND t.state = 1
+            ';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(array('taskList' => $entity->getId()));
+    }
+
     // /**
     //  * @return TaskList[] Returns an array of TaskList objects
     //  */
